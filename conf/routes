@@ -1,0 +1,11 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Authenticate
+POST /api/authenticate  @controllers.AuthenticationController.authenticate
+POST /api/refresh-token @controllers.AuthenticationController.refreshToken
+
+
+# API, v1
+->            /api/v1  api.v1.Routes

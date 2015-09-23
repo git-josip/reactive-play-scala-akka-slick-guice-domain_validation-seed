@@ -1,0 +1,72 @@
+<body class="markdown-body entry-content" itemprop="mainContentOfPage"><h1><a id="user-content-restful-scala-reactive-backend" class="anchor" href="#restful-scala-reactive-backend" aria-hidden="true"><span class="octicon octicon-link"></span></a>restful scala reactive backend</h1>
+
+    <p>This is rest application seed using Scala 2.11, PlayFramework 2.4, Slick 3.0, Postgres 9.4, Akka Actors, FlyWay DB migrations, JWT Token Authentication and Deep Domain validation</p>
+
+    <ul>
+        <li>Seed is having multiple developed tools for deep domain validation. Deep Domain Validation is representing custom validation of Domain (or any others) objects that have simple or complex validation rules, from simple ones like notNullNorEmpty, lengthIsBiggerOrEqualTo, validEmail to complex ones like unique in DB some other complex dependencies between objects. It is providing simple solution of how to write structured ItemValidators[T] .</li>
+        <li>Domain Validation is populating <code>Messages</code> which can have INFO, WARNING or ERROR messages, which can later be presented to API user, also populated <code>Messages</code> can be used to decide what to do if i.e. WARNING is present, then we can decide to go in some direction like retry our attempt, or if ERROR is present then we will revert multiple actions.</li>
+        <li><p>in application is implementing deep validation where all ERRORS, WARNING and INFO messages are collected and returned in unified response</p></li>
+        <li><p>all rest responses are unified and response has same structure every time so it is easier to handle errors, warning and information messages and also it is easier to handle specific data on pages.
+            Response is structured to have GLOBAL and LOCAL messages. LOCAL messages are messages that are coupled to some field i.e. = "username is too log. Allowed length is 80 chars". Global messages are messages that are reflecting state of whole data on page, i.e. "User will not be active until is approved". Local and Global messages are having three levels: ERROR, WARNING and INFORMATION.
+            example response: </p></li>
+        <li><p>GLOBAL messages:</p></li>
+    </ul>
+
+    <div class="highlight highlight-source-json"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>messages<span class="pl-pds">"</span></span> : {
+        <span class="pl-s"><span class="pl-pds">"</span>global<span class="pl-pds">"</span></span> : {
+            <span class="pl-s"><span class="pl-pds">"</span>info<span class="pl-pds">"</span></span>: [<span class="pl-s"><span class="pl-pds">"</span>User successfully created.<span class="pl-pds">"</span></span>],
+            <span class="pl-s"><span class="pl-pds">"</span>warnings<span class="pl-pds">"</span></span>: [<span class="pl-s"><span class="pl-pds">"</span>User will not be available for login until is activated<span class="pl-pds">"</span></span>],
+            <span class="pl-s"><span class="pl-pds">"</span>errors<span class="pl-pds">"</span></span>: []
+        },
+        <span class="pl-s"><span class="pl-pds">"</span>local<span class="pl-pds">"</span></span> : []
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span>:{
+        <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>: <span class="pl-c1">2</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>firstName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Mister<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>lastName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Sir<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>mistersir<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>mistersir@example.com<span class="pl-pds">"</span></span>
+    }
+}</pre></div>
+
+    <ul>
+        <li>LOCAL messages:</li>
+    </ul>
+
+    <div class="highlight highlight-source-json"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>messages<span class="pl-pds">"</span></span> : {
+        <span class="pl-s"><span class="pl-pds">"</span>global<span class="pl-pds">"</span></span> : {
+            <span class="pl-s"><span class="pl-pds">"</span>info<span class="pl-pds">"</span></span>: [],
+            <span class="pl-s"><span class="pl-pds">"</span>warnings<span class="pl-pds">"</span></span>: [],
+            <span class="pl-s"><span class="pl-pds">"</span>errors<span class="pl-pds">"</span></span>: []
+        },
+        <span class="pl-s"><span class="pl-pds">"</span>local<span class="pl-pds">"</span></span> : [
+            {
+                <span class="pl-s"><span class="pl-pds">"</span>formId<span class="pl-pds">"</span></span> : <span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>errors<span class="pl-pds">"</span></span> : [<span class="pl-s"><span class="pl-pds">"</span>User with this username already exists.<span class="pl-pds">"</span></span>],
+                <span class="pl-s"><span class="pl-pds">"</span>warnings<span class="pl-pds">"</span></span> : [],
+                <span class="pl-s"><span class="pl-pds">"</span>info<span class="pl-pds">"</span></span> : []
+            }
+        ]
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span>:{
+        <span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>: <span class="pl-c1">2</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>firstName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Mister<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>lastName<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Sir<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>username<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>mistersir<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>mistersir@example.com<span class="pl-pds">"</span></span>
+    }
+}</pre></div>
+
+    <ul>
+        <li><p>JSON Web Tokens (JWT) is used for user identification and authentication</p></li>
+        <li><p>application is divided into modules i.e. user module, user module etc. Each module have dao, domain, validation, service packages.</p></li>
+        <li><p>Database migrations:</p>
+
+            <ul>
+                <li>in <code>db_init</code> directory is initial postgres script that will create database <code>luxuryakka</code> with user <code>luxuryakka</code> and password <code>luxuryakka</code> . That can be easily done manually.</li>
+                <li>when application is started db migrations are available on : <code>http://localhost:9000/@flyway/default</code> where pending migrations can be applied as described here: <a href="https://github.com/flyway/flyway-play">Play 2.4 FlayWay</a></li>
+            </ul></li>
+    </ul>
+</body>
