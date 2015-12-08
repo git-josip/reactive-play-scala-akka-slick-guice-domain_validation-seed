@@ -4,12 +4,10 @@ import com.josip.reactiveluxury.core.Asserts
 import Asserts._
 import play.api.libs.json.Json
 
-case class MessageKey(value: String)
-{
+case class MessageKey(value: String) {
   argumentIsNotNullNorEmpty(value)
 }
 
-object MessageKey
-{
+object MessageKey {
   implicit val jsonWrites = Json.writes[MessageKey]
 }
