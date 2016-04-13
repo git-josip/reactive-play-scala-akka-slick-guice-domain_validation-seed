@@ -3,7 +3,7 @@ package com.josip.reactiveluxury.core.response
 import com.josip.reactiveluxury.core.Asserts
 import com.josip.reactiveluxury.core.messages.{MessageKey, Messages}
 import com.josip.reactiveluxury.core.messages.MessageKey
-import play.api.libs.json.{JsError, JsValue, Writes}
+import play.api.libs.json.{Json, JsError, JsValue, Writes}
 
 object ResponseTools
 {
@@ -35,6 +35,12 @@ object ResponseTools
     Asserts.argumentIsNotNull(data)
 
     RestResponse[T](data = Some(data))
+  }
+
+  def noData(messages: Messages) = {
+    Asserts.argumentIsNotNull(messages)
+
+    ResponseTools.restResponseOf(Json.toJson("{}"), messages)
   }
 
   def messages(messagesRestResponse: MessagesRestResponse) =

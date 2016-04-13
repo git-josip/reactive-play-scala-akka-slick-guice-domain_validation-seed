@@ -6,11 +6,11 @@ import play.api.libs.json.{Json, Format}
 
 case class TokenPayload(
   userId      : Long,
-  username    : String,
+  email       : String,
   expiration  : DateTime
 ) {
   Asserts.argumentIsNotNull(userId)
-  Asserts.argumentIsNotNull(username)
+  Asserts.argumentIsNotNull(email)
   Asserts.argumentIsNotNull(expiration)
 }
 

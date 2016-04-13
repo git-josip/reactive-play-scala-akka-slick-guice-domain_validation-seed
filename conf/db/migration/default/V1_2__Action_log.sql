@@ -8,5 +8,9 @@ CREATE TABLE public.action_log
   before         JSON,
   after          JSON,
   created_on     TIMESTAMP    NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (user_id) REFERENCES "app_user"(id)
 );
+CREATE INDEX action_log__created_on_idx ON action_log (created_on);
+CREATE INDEX action_log__domain_id_idx ON action_log (domain_id);
+CREATE INDEX action_log__domain_type_idx ON action_log (domain_type);
+CREATE INDEX action_log__user_id_idx ON action_log (user_id);

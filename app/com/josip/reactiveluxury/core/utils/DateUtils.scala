@@ -5,7 +5,7 @@ import com.josip.reactiveluxury.core.Asserts
 import scala.language.implicitConversions
 import org.joda.time._
 import java.util.Date
-import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
+import org.joda.time.format.{PeriodFormatterBuilder, PeriodFormatter, DateTimeFormatter, DateTimeFormat}
 import Asserts._
 import java.sql.{Date => SqlDate}
 
@@ -18,6 +18,43 @@ object DateUtils
   final val POSTGRES_DATE_FORMAT          : DateTimeFormatter = DateTimeFormat.forPattern("YYYY-MM-dd")
   final val HH_mm_DATE_FORMATTER          : DateTimeFormatter = DateTimeFormat.forPattern("HH:mm")
   final val YYYY_MM_dd__dateFormatter     : DateTimeFormatter = DateTimeFormat.forPattern("YYYY-MM-dd");
+
+  final val PERIOD_FORMATTER: PeriodFormatter = new PeriodFormatterBuilder()
+    .appendHours()
+    .appendSeparator(":")
+    .appendMinutes()
+    .appendSeparator(":")
+    .appendSeconds()
+    .toFormatter
+
+  def isValidValueForFormatter(value: String, dateTimeFormatter: DateTimeFormatter) = {
+    Asserts.argumentIsNotNull(value)
+    Asserts.argumentIsNotNull(dateTimeFormatter)
+
+    try {
+      dateTimeFormatter.parseLocalTime(value)
+
+      true
+    } catch {
+      case  _ : Throwable => false
+    }
+  }
+
+  def canParsePeriod(valueCandidate: String): Boolean = {
+    try {
+      DateUtils.PERIOD_FORMATTER.parsePeriod(valueCandidate)
+      true
+    } catch {
+      case _: Throwable => false
+    }
+  }
+
+  def parsePeriod(valueCandidate: String): Period = {
+    Asserts.argumentIsNotNull(valueCandidate)
+    Asserts.argumentIsTrue(DateUtils.canParsePeriod(valueCandidate))
+
+    DateUtils.PERIOD_FORMATTER.parsePeriod(valueCandidate)
+  }
 
   def nowDateTimeUTC: DateTime =
   {

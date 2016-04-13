@@ -1,7 +1,4 @@
 
 # Users routes
-GET         /users/:id                                                                @controllers.api.v1.UserController.read(id: Long)
-POST        /users                                                                    @controllers.api.v1.UserController.create
-
-# GeneralSettings routes
-GET /general-settings @controllers.api.v1.GeneralSettingsController.read
+GET         /user/:id                                                                @controllers.api.v1.UserController.read(id: Long)
+POST        /user                                                                    @controllers.api.v1.UserController.create

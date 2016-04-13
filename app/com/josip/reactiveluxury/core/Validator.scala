@@ -8,7 +8,7 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait Validator[T] {
-  def validate(item:T) : Future[ValidationResult[T]]
+  def validate(item:T, userId: Option[Long]) : Future[ValidationResult[T]]
 }
 
 case class ValidationResult[T: Writes](

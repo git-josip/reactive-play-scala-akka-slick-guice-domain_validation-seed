@@ -29,6 +29,15 @@ object ReactiveValidateUtils {
     Future.successful({})
   }
 
+  def isNotNull[T](value: T, messages: Messages, errorKey: String, errorMessage: String) = {
+    argumentIsNotNull(messages)
+    argumentIsNotNullNorEmpty(errorMessage)
+
+    ValidateUtils.isNotNull(value, messages, errorKey, errorMessage)
+
+    Future.successful({})
+  }
+
   def isNotNullNorEmpty(value: String, messages: Messages, errorKey: String, errorMessage: String) = {
     argumentIsNotNull(messages)
     argumentIsNotNullNorEmpty(errorMessage)

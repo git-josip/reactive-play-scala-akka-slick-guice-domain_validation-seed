@@ -8,7 +8,7 @@ import Asserts._
 object ValidateUtils
 {
   val EMPTY_ERROR_KEY = ""
-  private final val REGEX_MATCHING_VALID_MAIL = """^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$"""
+  private final val REGEX_MATCHING_VALID_MAIL = """^([a-z0-9_\.-]+)\+?(([a-z0-9_\.-]+))?@([\da-z\.-]+)\.([a-z\.]{2,6})$"""
 
   object ValidateMessages
   {

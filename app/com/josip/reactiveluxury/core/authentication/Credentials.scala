@@ -4,10 +4,10 @@ import com.josip.reactiveluxury.core.Asserts
 import play.api.libs.json.{Json, Format}
 
 case class Credentials(
-  username : String,
+                        email : String,
   password : String
 ) {
-  Asserts.argumentIsNotNull(username)
+  Asserts.argumentIsNotNull(email)
   Asserts.argumentIsNotNull(password)
 }
 
