@@ -3,9 +3,10 @@ restful scala reactive backend
 
 DDD DOMAIN VALIDATION: http://codemozzer.me/domain,validation,action,composable,messages/2015/09/26/domain_validation.html
 
-This is rest application seed using Scala 2.11, PlayFramework 2.4, Slick 3.0, Postgres 9.4, Akka Actors, FlyWay DB migrations, JWT Token Authentication and Deep Domain validation
+This is rest application seed using Scala 2.11, PlayFramework 2.4, Slick 3.1, Postgres 9.4, Akka Actors, FlyWay DB migrations, JWT Token Authentication and Deep Domain validation
 
-
+- introduced working generic and reusable Slick Repository
+- introduced generic domain service
 - Seed is having multiple developed tools for deep domain validation. Deep Domain Validation is representing custom validation of Domain (or any others) objects that have simple or complex validation rules, from simple ones like notNullNorEmpty, lengthIsBiggerOrEqualTo, validEmail to complex ones like unique in DB some other complex dependencies between objects. It is providing simple solution of how to write structured ItemValidators[T] .
 - Domain Validation is populating `Messages` which can have INFO, WARNING or ERROR messages, which can later be presented to API user, also populated `Messages` can be used to decide what to do if i.e. WARNING is present, then we can decide to go in some direction like retry our attempt, or if ERROR is present then we will revert multiple actions.
 - in application is implementing deep validation where all ERRORS, WARNING and INFO messages are collected and returned in unified response
