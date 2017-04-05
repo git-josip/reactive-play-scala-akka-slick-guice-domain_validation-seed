@@ -7,19 +7,19 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
+  filters,
   "org.postgresql" % "postgresql" % "9.4-1202-jdbc41",
-  "com.nimbusds" % "nimbus-jose-jwt" % "4.11.2",
-  "com.typesafe.slick" %% "slick" % "3.1.1",
-  "org.flywaydb" %% "flyway-play" % "2.2.1",
+  "com.nimbusds" % "nimbus-jose-jwt" % "4.34.2",
+  "com.typesafe.slick" %% "slick" % "3.2.0",
+  "org.flywaydb" %% "flyway-play" % "3.0.1",
   "org.apache.commons" % "commons-email" % "1.4",
-  "com.github.tminglei" %% "slick-pg" % "0.12.0",
-  "com.github.kenglxn.QRGen" % "javase" % "2.2.0"
+  "com.github.tminglei" %% "slick-pg" % "0.15.0-RC"
 )
 
 routesGenerator := InjectedRoutesGenerator

@@ -36,7 +36,7 @@ class UserRepositoryImpl @Inject() (databaseProvider: DatabaseProvider) extends 
     val selectQuery =
       sql"""
            SELECT id, external_id, email, role, password, status
-           FROM public.user
+           FROM public.app_user
            WHERE id = $id
         """.as[UserRepository.UserMinimalDetails]
 
@@ -51,7 +51,7 @@ class UserRepositoryImpl @Inject() (databaseProvider: DatabaseProvider) extends 
     val selectQuery =
       sql"""
            SELECT id, external_id, email, role, password, status
-           FROM public.user
+           FROM public.app_user
            WHERE email = $email
         """.as[UserRepository.UserMinimalDetails]
 
@@ -66,7 +66,7 @@ class UserRepositoryImpl @Inject() (databaseProvider: DatabaseProvider) extends 
     val selectQuery =
       sql"""
            SELECT id, external_id, email, role, password, status
-           FROM public.user
+           FROM public.app_user
            WHERE external_id = $externalId
         """.as[UserRepository.UserMinimalDetails]
 

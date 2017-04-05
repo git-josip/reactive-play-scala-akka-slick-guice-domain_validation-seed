@@ -1,11 +1,11 @@
 package com.josip.reactiveluxury.configuration
 
-import javax.inject.Singleton
-import play.api.db.DB
-import play.api.Play.current
-import slick.driver.PostgresDriver.api._
+import javax.inject.{Inject, Singleton}
+
+import play.api.db.DBApi
+import slick.jdbc.PostgresProfile.api._
 
 @Singleton()
-class DatabaseProvider {
-  lazy val db = Database.forDataSource(DB.getDataSource())
+class DatabaseProvider @Inject() (dbApi: DBApi) {
+  lazy val db = Database.forDataSource(dbApi.database("default").dataSource, None)
 }

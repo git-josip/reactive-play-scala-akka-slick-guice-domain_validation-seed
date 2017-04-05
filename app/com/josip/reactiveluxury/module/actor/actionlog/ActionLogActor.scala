@@ -3,24 +3,21 @@ package com.josip.reactiveluxury.module.actor.actionlog
 import akka.actor.{Actor, ActorLogging}
 import com.josip.reactiveluxury.core.utils.DateUtils
 import com.josip.reactiveluxury.module.domain.actionlog.ActionLogEntity
-import play.api.Play.current
-import play.api.db.DB
 import play.api.libs.json.Json
 import com.josip.reactiveluxury.core.slick.postgres.MyPostgresDriver.api._
-
 import com.josip.reactiveluxury.configuration.CustomExecutionContext._
+import com.josip.reactiveluxury.configuration.DatabaseProvider
 
 case class ActionLogCreateMsg(actionLog: ActionLogEntity)
 
-class ActionLogActor extends Actor with ActorLogging {
-  private lazy val db = Database.forDataSource(DB.getDataSource())
+class ActionLogActor(databaseProvider: DatabaseProvider) extends Actor with ActorLogging {
 
   def receive = {
     case ActionLogCreateMsg(actionLog) =>
       log.debug(s"ActionLog received.")
 
       val action = ActionLogActor.INSERT_QUERY(actionLog).transactionally
-      val actionInsertFuture = db.run(action)
+      val actionInsertFuture = databaseProvider.db.run(action)
 
       actionInsertFuture.onSuccess {
         case e =>

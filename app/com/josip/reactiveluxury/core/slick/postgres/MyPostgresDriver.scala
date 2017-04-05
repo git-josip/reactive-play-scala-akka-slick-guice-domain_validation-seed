@@ -2,7 +2,7 @@ package com.josip.reactiveluxury.core.slick.postgres
 
 import com.github.tminglei.slickpg._
 
-trait MyPostgresDriver extends ExPostgresDriver
+trait MyPostgresDriver extends ExPostgresProfile
   with PgDateSupport {
 
   override val api = MyAPI

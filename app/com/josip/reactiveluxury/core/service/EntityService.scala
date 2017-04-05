@@ -67,7 +67,7 @@ abstract class EntityServiceImpl[EntityItem <: Entity[EntityItem], EntityReposit
           before      = None,
           after       = Some(createdEntity)
         )
-        ActorFactory.actionLogActorRouter ! ActionLogCreateMsg(createdAction)
+//        ActorFactory.actionLogActorRouter ! ActionLogCreateMsg(createdAction)
         Future.successful({})
       }
     } yield createdEntity
@@ -104,7 +104,7 @@ abstract class EntityServiceImpl[EntityItem <: Entity[EntityItem], EntityReposit
           before      = Some(item),
           after       = Some(updatedEntity)
         )
-        ActorFactory.actionLogActorRouter ! ActionLogCreateMsg(createdAction)
+//        ActorFactory.actionLogActorRouter ! ActionLogCreateMsg(createdAction)
         Future.successful({})
       }
     } yield updatedEntity
