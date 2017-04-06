@@ -5,12 +5,12 @@ import com.josip.reactiveluxury.core.utils.DateUtils
 import com.josip.reactiveluxury.module.domain.actionlog.ActionLogEntity
 import play.api.libs.json.Json
 import com.josip.reactiveluxury.core.slick.postgres.MyPostgresDriver.api._
-import com.josip.reactiveluxury.configuration.CustomExecutionContext._
 import com.josip.reactiveluxury.configuration.DatabaseProvider
 
-case class ActionLogCreateMsg(actionLog: ActionLogEntity)
+import scala.concurrent.ExecutionContext
 
-class ActionLogActor(databaseProvider: DatabaseProvider) extends Actor with ActorLogging {
+case class ActionLogCreateMsg(actionLog: ActionLogEntity)
+class ActionLogActor(databaseProvider: DatabaseProvider, implicit val ec : ExecutionContext) extends Actor with ActorLogging {
 
   def receive = {
     case ActionLogCreateMsg(actionLog) =>
@@ -32,8 +32,9 @@ class ActionLogActor(databaseProvider: DatabaseProvider) extends Actor with Acto
   }
 }
 
-private object ActionLogActor
-{
+object ActionLogActor {
+  val NAME = "actionLogActorRouter"
+
   def INSERT_QUERY(actionLog: ActionLogEntity) = {
     sqlu"""
       INSERT INTO action_log

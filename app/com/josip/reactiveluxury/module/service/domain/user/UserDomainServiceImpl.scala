@@ -2,17 +2,20 @@ package com.josip.reactiveluxury.module.service.domain.user
 
 import javax.inject.{Inject, Singleton}
 
+import akka.actor.ActorSystem
 import com.josip.reactiveluxury.core.Asserts
 import com.josip.reactiveluxury.core.service.EntityServiceImpl
 import com.josip.reactiveluxury.module.dao.user.UserRepository
 import com.josip.reactiveluxury.module.domain.user.User
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
 class UserDomainServiceImpl @Inject() (
-  override val entityRepository: UserRepository
-) extends EntityServiceImpl[User, UserRepository](entityRepository) with UserDomainService {
+  override val entityRepository: UserRepository,
+  actorSystem: ActorSystem,
+  implicit override val ec : ExecutionContext
+) extends EntityServiceImpl[User, UserRepository](entityRepository, actorSystem) with UserDomainService {
   Asserts.argumentIsNotNull(entityRepository)
 
   override def tryGetByEmail(email: String): Future[Option[User]] = {

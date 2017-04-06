@@ -15,13 +15,14 @@ import com.josip.reactiveluxury.module.service.domain.user.UserDomainService
 import play.api.Logger
 import play.api.libs.json.Json
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
 class AuthenticationServiceImpl @Inject()
 (
   override val authenticationConfiguration  : AuthenticationConfigurationSetup,
-  val userDomainService                     : UserDomainService
+  val userDomainService                     : UserDomainService,
+  implicit val ec : ExecutionContext
 ) extends AuthenticationService {
   Asserts.argumentIsNotNull(authenticationConfiguration)
   Asserts.argumentIsNotNull(userDomainService)

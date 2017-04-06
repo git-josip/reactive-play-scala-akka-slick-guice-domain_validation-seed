@@ -72,5 +72,5 @@ example response:
 
 - Database migrations:
   - in `db_init` directory is initial postgres script that will create database `luxuryakka` with user `luxuryakka` and password `luxuryakka` . That can be easily done manually.
-  - when application is started db migrations are available on : `http://localhost:9000/@flyway/default` where pending migrations can be applied as described here: [Play 2.4 FlayWay](https://github.com/flyway/flyway-play)
+  - when application is started db migrations are available on : `http://localhost:9000/@flyway/default` where pending migrations can be applied as described here: [Play FlayWay](https://github.com/flyway/flyway-play)
 

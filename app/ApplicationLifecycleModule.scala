@@ -1,19 +1,18 @@
-import com.josip.reactiveluxury.configuration.actor.ActorFactory
-
 import scala.concurrent.Future
 import javax.inject._
+
+import akka.actor.ActorSystem
 import play.api.inject.ApplicationLifecycle
 
 @Singleton
 class ApplicationLifecycleModule @Inject() (
   lifecycle: ApplicationLifecycle,
-  actorFactory: ActorFactory
+  actorSystem: ActorSystem
 ) {
+
   lifecycle.addStopHook { () =>
     Future.successful({
-      actorFactory.actorSystem.terminate()
+      actorSystem.terminate()
     })
   }
-
-
 }

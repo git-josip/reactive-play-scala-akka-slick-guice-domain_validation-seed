@@ -1,6 +1,7 @@
 package controllers.api.v1
 
 import javax.inject.Inject
+
 import com.josip.reactiveluxury.core.Asserts
 import com.josip.reactiveluxury.core.response.ResponseTools
 import com.josip.reactiveluxury.core.utils.HashUtils
@@ -9,16 +10,20 @@ import com.josip.reactiveluxury.module.service.domain.authentication.Authenticat
 import com.josip.reactiveluxury.module.service.domain.user.UserDomainService
 import com.josip.reactiveluxury.module.validation.user.UserCreateValidator
 import controllers.core.SecuredController
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 import com.josip.reactiveluxury.configuration.CustomExecutionContext._
+import com.josip.reactiveluxury.configuration.actor.ActorFactory
 
 class UserController @Inject()
 (
   private val userDomainService     : UserDomainService,
-  private val userCreateValidator   : UserCreateValidator
+  private val userCreateValidator   : UserCreateValidator,
+  private val actorFactory          : ActorFactory
 )
 (
-  implicit private val authenticationService: AuthenticationService
+  implicit private val authenticationService: AuthenticationService,
+  implicit override val ec : ExecutionContext
 ) extends SecuredController
 {
   Asserts.argumentIsNotNull(userDomainService)

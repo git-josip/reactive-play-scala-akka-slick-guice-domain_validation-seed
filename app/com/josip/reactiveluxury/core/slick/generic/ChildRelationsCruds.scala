@@ -4,7 +4,8 @@ import com.josip.reactiveluxury.configuration.DatabaseProvider
 import com.josip.reactiveluxury.core.Asserts
 import slick.lifted
 import com.josip.reactiveluxury.core.slick.postgres.MyPostgresDriver.api._
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 import com.josip.reactiveluxury.configuration.CustomExecutionContext._
 
 trait ChildRelationsCrudRepository [ChildRelationItem <: ChildRelation[ChildRelationItem]] {
@@ -12,8 +13,11 @@ trait ChildRelationsCrudRepository [ChildRelationItem <: ChildRelation[ChildRela
   def insertAll(items: Seq[ChildRelationItem]): Future[Option[Int]]
 }
 
-abstract class ChildRelationsCrudRepositoryImpl[T <: Table[ChildRelationItem], ChildRelationItem <: ChildRelation[ChildRelationItem]]
-(val databaseProvider: DatabaseProvider, val query: lifted.TableQuery[T]) extends ChildRelationsCrudRepository[ChildRelationItem] {
+abstract class ChildRelationsCrudRepositoryImpl[T <: Table[ChildRelationItem], ChildRelationItem <: ChildRelation[ChildRelationItem]](
+  val databaseProvider: DatabaseProvider,
+  val query: lifted.TableQuery[T],
+  implicit val ec : ExecutionContext
+) extends ChildRelationsCrudRepository[ChildRelationItem] {
   Asserts.argumentIsNotNull(databaseProvider)
   Asserts.argumentIsNotNull(query)
 

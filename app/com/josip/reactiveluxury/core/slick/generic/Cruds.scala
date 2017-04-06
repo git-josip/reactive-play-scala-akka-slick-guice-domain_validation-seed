@@ -1,13 +1,15 @@
 package com.josip.reactiveluxury.core.slick.generic
 
 import java.util.UUID
+
 import com.josip.reactiveluxury.configuration.DatabaseProvider
 import com.josip.reactiveluxury.core.pagination.Pagination
 import com.josip.reactiveluxury.core.{Asserts, GeneratedId}
 import org.joda.time.DateTime
 import com.josip.reactiveluxury.core.slick.postgres.MyPostgresDriver.api._
 import slick.lifted
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 import com.josip.reactiveluxury.configuration.CustomExecutionContext._
 
 trait CrudRepository[EntityItem <: Entity[EntityItem]] {
@@ -26,7 +28,11 @@ trait CrudRepository[EntityItem <: Entity[EntityItem]] {
   def generateUniqueExternalId: Future[String]
 }
 
-abstract class CrudRepositoryImpl[T <: Table[EntityItem] with IdentifiableTable, EntityItem <: Entity[EntityItem]](val databaseProvider: DatabaseProvider, val query: lifted.TableQuery[T]) extends CrudRepository[EntityItem]{
+abstract class CrudRepositoryImpl[T <: Table[EntityItem] with IdentifiableTable, EntityItem <: Entity[EntityItem]](
+  val databaseProvider: DatabaseProvider,
+  val query: lifted.TableQuery[T],
+  implicit val ec : ExecutionContext
+) extends CrudRepository[EntityItem]{
   Asserts.argumentIsNotNull(databaseProvider)
   Asserts.argumentIsNotNull(query)
 

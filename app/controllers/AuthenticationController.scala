@@ -1,21 +1,24 @@
 package controllers
 
 import javax.inject.Inject
+
 import com.josip.reactiveluxury.core.response.ResponseTools
 import com.josip.reactiveluxury.module.service.domain.authentication.AuthenticationService
 import com.josip.reactiveluxury.module.service.domain.user.UserDomainService
 import com.josip.reactiveluxury.core.Asserts
 import play.api.libs.json.Json
-import play.api.mvc.{Controller, Action}
+import play.api.mvc.{Action, Controller}
 import com.josip.reactiveluxury.core.authentication.Credentials
 import com.josip.reactiveluxury.core.jwt.ResponseToken
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 import com.josip.reactiveluxury.configuration.CustomExecutionContext._
 
 class AuthenticationController @Inject()
 (
   private val userDomainService     : UserDomainService,
-  private val authenticationService : AuthenticationService
+  private val authenticationService : AuthenticationService,
+  implicit val ec : ExecutionContext
 ) extends Controller {
   Asserts.argumentIsNotNull(userDomainService)
   Asserts.argumentIsNotNull(authenticationService)

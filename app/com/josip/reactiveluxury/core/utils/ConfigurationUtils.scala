@@ -1,9 +1,12 @@
 package com.josip.reactiveluxury.core.utils
 
-import com.josip.reactiveluxury.core.Asserts
-import play.api.Play._
+import javax.inject.{Inject, Singleton}
 
-object ConfigurationUtils {
+import com.josip.reactiveluxury.core.Asserts
+import play.api.Configuration
+
+@Singleton()
+class ConfigurationUtils @Inject()(configuration: Configuration) {
   private final val KEY_IS_NOT_APP_CONF_ERROR_FORMATTER = "%s not specified in application.conf"
   private final val TYPE_NOT_SUPPORTED_ERROR_FORMATTER = "%s type is not supported"
 
@@ -11,9 +14,9 @@ object ConfigurationUtils {
     Asserts.argumentIsNotNullNorEmpty(key)
 
     classManifest match {
-      case m if m == manifest[String] => current.configuration.getString(key).getOrElse(assureKeyState(key)).asInstanceOf[T]
-      case m if m == manifest[Int]    => current.configuration.getInt(key).getOrElse(assureKeyState(key)).asInstanceOf[T]
-      case m if m == manifest[Long]   => current.configuration.getLong(key).getOrElse(assureKeyState(key)).asInstanceOf[T]
+      case m if m == manifest[String] => this.configuration.getString(key).getOrElse(assureKeyState(key)).asInstanceOf[T]
+      case m if m == manifest[Int]    => this.configuration.getInt(key).getOrElse(assureKeyState(key)).asInstanceOf[T]
+      case m if m == manifest[Long]   => this.configuration.getLong(key).getOrElse(assureKeyState(key)).asInstanceOf[T]
       case _ => throw new RuntimeException(TYPE_NOT_SUPPORTED_ERROR_FORMATTER.format(classManifest.runtimeClass.getSimpleName))
     }
   }

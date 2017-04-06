@@ -1,18 +1,21 @@
 package com.josip.reactiveluxury.module.validation.user
 
 import javax.inject.{Inject, Singleton}
+
 import com.josip.reactiveluxury.configuration.CustomExecutionContext._
 import com.josip.reactiveluxury.core.messages.Messages
 import com.josip.reactiveluxury.core.utils.{ReactiveValidateUtils, ValidateUtils}
 import com.josip.reactiveluxury.core.{Asserts, ValidationResult, Validator}
 import com.josip.reactiveluxury.module.domain.user.UserCreateModel
 import com.josip.reactiveluxury.module.service.domain.user.UserDomainService
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
 class UserCreateValidator @Inject()
 (
-  private val entityDomainService : UserDomainService
+  private val entityDomainService : UserDomainService,
+  implicit val ec : ExecutionContext
 ) extends Validator[UserCreateModel] {
   Asserts.argumentIsNotNull(entityDomainService)
 

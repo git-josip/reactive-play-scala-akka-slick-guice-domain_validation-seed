@@ -1,8 +1,8 @@
 package controllers.core
 
-import com.josip.reactiveluxury.core.jwt.{JwtUtil, TokenPayload, JwtSecret}
+import com.josip.reactiveluxury.core.jwt.{JwtSecret, JwtUtil, TokenPayload}
 import com.josip.reactiveluxury.core.utils.StringUtils
-import com.josip.reactiveluxury.core.{ValidationResult, Validator, Asserts}
+import com.josip.reactiveluxury.core.{Asserts, ValidationResult, Validator}
 import com.josip.reactiveluxury.core.response.ResponseTools
 import com.josip.reactiveluxury.module.domain.user.User
 import com.josip.reactiveluxury.module.service.domain.authentication.AuthenticationService
@@ -10,12 +10,14 @@ import play.api.Logger
 import play.api.libs.Files.TemporaryFile
 import play.api.libs.json.{Format, JsValue}
 import play.api.mvc._
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 import com.josip.reactiveluxury.configuration.CustomExecutionContext._
 
 abstract class SecuredController(
-                                  implicit private val authenticationService : AuthenticationService
-                                ) extends Controller {
+  implicit private val authenticationService : AuthenticationService,
+  implicit val ec: ExecutionContext
+) extends Controller {
   Asserts.argumentIsNotNull(authenticationService)
 
   implicit private final val SECRET = JwtSecret(this.authenticationService.authenticationConfiguration().secret)

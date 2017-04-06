@@ -14,7 +14,7 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   filters,
-  "org.postgresql" % "postgresql" % "9.4-1202-jdbc41",
+  "org.postgresql" % "postgresql" % "42.0.0",
   "com.nimbusds" % "nimbus-jose-jwt" % "4.34.2",
   "com.typesafe.slick" %% "slick" % "3.2.0",
   "org.flywaydb" %% "flyway-play" % "3.0.1",

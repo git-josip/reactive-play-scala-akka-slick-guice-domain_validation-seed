@@ -7,9 +7,9 @@ import akka.routing.FromConfig
 import com.josip.reactiveluxury.configuration.DatabaseProvider
 import com.josip.reactiveluxury.module.actor.actionlog.ActionLogActor
 
-@Singleton()
-class ActorFactory @Inject() (databaseProvider: DatabaseProvider) {
-  val actorSystem = ActorSystem("reactiveluxury")
+import scala.concurrent.ExecutionContext
 
-  actorSystem.actorOf(Props(new ActionLogActor(databaseProvider)).withRouter(FromConfig()), name = "actionLogActorRouter")
+@Singleton()
+class ActorFactory @Inject() (databaseProvider: DatabaseProvider, actorSystem: ActorSystem, implicit val ec : ExecutionContext) {
+  actorSystem.actorOf(Props(new ActionLogActor(databaseProvider, ec)).withRouter(FromConfig()), name = ActionLogActor.NAME)
 }

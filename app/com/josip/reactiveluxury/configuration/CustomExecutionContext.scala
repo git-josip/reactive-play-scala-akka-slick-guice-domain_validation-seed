@@ -2,16 +2,14 @@ package com.josip.reactiveluxury.configuration
 
 import play.api.Logger
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 object CustomExecutionContext {
 
 //  implicit lazy val customForkJoinPoolContext = createExecutionContext()
 
-  implicit lazy val customForkJoinPoolContext = scala.concurrent.ExecutionContext.Implicits.global
-
   implicit class ErrorMessageFuture[A](val future: Future[A]) extends AnyVal {
-    def handleError(error: String = "Exception occurred."): Future[A] = future.recoverWith {
+    def handleError(error: String = "Exception occurred.")(implicit ec : ExecutionContext): Future[A] = future.recoverWith {
       case t: Throwable =>
         Logger.logger.error(error, t)
         Future.failed(new RuntimeException(error, t))

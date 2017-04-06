@@ -1,15 +1,18 @@
 package com.josip.reactiveluxury.core.service
 
-import com.josip.reactiveluxury.configuration.actor.ActorFactory
+import akka.actor.ActorSystem
+import akka.util.Timeout
 import com.josip.reactiveluxury.core.pagination.Pagination
 import com.josip.reactiveluxury.core.slick.generic.{CrudRepository, Entity}
 import com.josip.reactiveluxury.core.utils.DateUtils
 import com.josip.reactiveluxury.core.Asserts
-import com.josip.reactiveluxury.module.actor.actionlog.ActionLogCreateMsg
-import com.josip.reactiveluxury.module.domain.actionlog.{ActionType, ActionDomainType, ActionLogEntity}
+import com.josip.reactiveluxury.module.actor.actionlog.{ActionLogActor, ActionLogCreateMsg}
+import com.josip.reactiveluxury.module.domain.actionlog.{ActionDomainType, ActionLogEntity, ActionType}
 import com.josip.reactiveluxury.module.domain.user.SystemUser
 import play.api.libs.json.Format
-import scala.concurrent.Future
+
+import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContext, Future}
 import com.josip.reactiveluxury.configuration.CustomExecutionContext._
 
 trait EntityService[EntityItem <: Entity[EntityItem]] {
@@ -25,13 +28,13 @@ trait EntityService[EntityItem <: Entity[EntityItem]] {
 
   def deleteById(id: Long)
 
-  def getById(id: Long): Future[EntityItem] = {
+  def getById(id: Long)(implicit ec : ExecutionContext): Future[EntityItem] = {
     this.tryGetById(id)
       .map(_.getOrElse(throw new RuntimeException(s"entity with this id does not exist. id: '$id', class: '${this.getClass}'"))
       )
   }
 
-  def getByExternalId(externalId: String): Future[EntityItem] = {
+  def getByExternalId(externalId: String)(implicit ec : ExecutionContext): Future[EntityItem] = {
     Asserts.argumentIsNotNull(externalId)
 
     this.tryGetByExternalId(externalId)
@@ -40,9 +43,8 @@ trait EntityService[EntityItem <: Entity[EntityItem]] {
   }
 }
 
-abstract class EntityServiceImpl[EntityItem <: Entity[EntityItem], EntityRepository <: CrudRepository[EntityItem]]
-(val entityRepository: EntityRepository)
-(implicit entityClassManifest: Manifest[EntityItem]) extends EntityService[EntityItem] {
+abstract class EntityServiceImpl[EntityItem <: Entity[EntityItem], EntityRepository <: CrudRepository[EntityItem]](val entityRepository: EntityRepository, val system: ActorSystem)
+(implicit entityClassManifest: Manifest[EntityItem], implicit val ec : ExecutionContext) extends EntityService[EntityItem] {
   Asserts.argumentIsNotNull(entityRepository)
   Asserts.argumentIsNotNull(entityClassManifest)
 
@@ -67,8 +69,8 @@ abstract class EntityServiceImpl[EntityItem <: Entity[EntityItem], EntityReposit
           before      = None,
           after       = Some(createdEntity)
         )
-//        ActorFactory.actionLogActorRouter ! ActionLogCreateMsg(createdAction)
-        Future.successful({})
+
+        system.actorSelection(s"user/${ActionLogActor.NAME}") ! ActionLogCreateMsg(createdAction)
       }
     } yield createdEntity
   }
@@ -96,7 +98,7 @@ abstract class EntityServiceImpl[EntityItem <: Entity[EntityItem], EntityReposit
           case Some(id) => id
           case None => SystemUser.id
         }
-        val createdAction = ActionLogEntity.of[EntityItem, EntityItem](
+        val updateAction = ActionLogEntity.of[EntityItem, EntityItem](
           userId      = actionUserId,
           domainType  = ActionDomainType.getByEntityClass(entityClassManifest.runtimeClass),
           domainId    = item.id.get,
@@ -104,7 +106,7 @@ abstract class EntityServiceImpl[EntityItem <: Entity[EntityItem], EntityReposit
           before      = Some(item),
           after       = Some(updatedEntity)
         )
-//        ActorFactory.actionLogActorRouter ! ActionLogCreateMsg(createdAction)
+        system.actorSelection(s"user/${ActionLogActor.NAME}") ! ActionLogCreateMsg(updateAction)
         Future.successful({})
       }
     } yield updatedEntity

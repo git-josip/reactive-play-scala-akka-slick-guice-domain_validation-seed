@@ -7,13 +7,17 @@ import com.josip.reactiveluxury.core.Asserts
 import com.josip.reactiveluxury.core.slick.generic.CrudRepositoryImpl
 import com.josip.reactiveluxury.module.dao.user.UserRepository
 import com.josip.reactiveluxury.module.dao.user.sql.UserEntityMapper._
-import com.josip.reactiveluxury.module.domain.user.{UserStatus, User}
+import com.josip.reactiveluxury.module.domain.user.{User, UserStatus}
 import com.josip.reactiveluxury.core.slick.postgres.MyPostgresDriver.api._
 import com.josip.reactiveluxury.configuration.CustomExecutionContext._
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
-class UserRepositoryImpl @Inject() (databaseProvider: DatabaseProvider) extends CrudRepositoryImpl[UserTableDescriptor, User](databaseProvider, UserTableDescriptor.user) with UserRepository {
+class UserRepositoryImpl @Inject() (
+  databaseProvider: DatabaseProvider,
+  implicit override val ec : ExecutionContext
+) extends CrudRepositoryImpl[UserTableDescriptor, User](databaseProvider, UserTableDescriptor.user, ec) with UserRepository {
   Asserts.argumentIsNotNull(databaseProvider)
 
   override def findByEmail(email: String): Future[Option[User]] = {
