@@ -3,7 +3,7 @@ restful scala reactive backend
 
 DDD DOMAIN VALIDATION: http://codemozzer.me/domain,validation,action,composable,messages/2015/09/26/domain_validation.html
 
-This is rest application seed using Scala 2.11.8, PlayFramework 2.5.13, Slick 3.2, Postgres 9.4, Akka Actors, FlyWay DB migrations, JWT Token Authentication and Deep Domain validation
+This is rest application seed using Scala 2.11.8, PlayFramework 2.5.13, Slick 3.2, Postgres 9.6, Akka Actors, FlyWay DB migrations, JWT Token Authentication and Deep Domain validation
 
 - introduced working generic and reusable Slick Repository
 - introduced generic domain service
