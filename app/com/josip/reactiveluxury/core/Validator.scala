@@ -1,11 +1,10 @@
 package com.josip.reactiveluxury.core
 
 import com.josip.reactiveluxury.core.messages.Messages
-import com.josip.reactiveluxury.core.response.{ResponseTools, RestResponse}
+import com.josip.reactiveluxury.core.response.RestResponse
 import com.josip.reactiveluxury.core.response.ResponseTools
 import play.api.libs.json.Writes
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
 trait Validator[T] {
   def validate(item:T, userId: Option[Long]) : Future[ValidationResult[T]]
@@ -13,27 +12,19 @@ trait Validator[T] {
 
 case class ValidationResult[T: Writes](
   validatedItem : T,
-  messages      : Future[Messages]
+  messages      : Messages
 ) {
   Asserts.argumentIsNotNull(validatedItem)
   Asserts.argumentIsNotNull(messages)
 
-  def isValid: Future[Boolean] = {
-    for {
-      m <- this.messages
-      result <- Future.successful(!m.hasErrors)
-    } yield result
+  def isValid: Boolean = {
+    !this.messages.hasErrors();
   }
 
-  def errorsRestResponse: Future[RestResponse[T]] = {
-    for {
-      m <- this.messages
-      result <- Future.successful(
-        ResponseTools.of(
-          data = this.validatedItem,
-          messages = Some(m)
-        )
-      )
-    } yield result
+  def errorsRestResponse: RestResponse[T] = {
+    ResponseTools.of(
+      data = this.validatedItem,
+      messages = Some(this.messages)
+    )
   }
 }

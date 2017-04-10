@@ -19,7 +19,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.2.0",
   "org.flywaydb" %% "flyway-play" % "3.0.1",
   "org.apache.commons" % "commons-email" % "1.4",
-  "com.github.tminglei" %% "slick-pg" % "0.15.0-RC"
+  "com.github.tminglei" %% "slick-pg" % "0.15.0-RC",
+  "org.scalaz" %% "scalaz-core" % "7.2.10"
 )
 
 routesGenerator := InjectedRoutesGenerator

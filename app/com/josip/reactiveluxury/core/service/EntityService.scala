@@ -71,6 +71,7 @@ abstract class EntityServiceImpl[EntityItem <: Entity[EntityItem], EntityReposit
         )
 
         system.actorSelection(s"user/${ActionLogActor.NAME}") ! ActionLogCreateMsg(createdAction)
+        Future.successful({})
       }
     } yield createdEntity
   }

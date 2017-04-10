@@ -53,8 +53,7 @@ class UserController @Inject()
       )
       for {
         createdItem <- this.userDomainService.create(User.of(userCreateEntityAfterModification))(None) handleError()
-        messages <- validationResult.messages
-        result <- Future.successful(Ok(ResponseTools.of(createdItem.withoutPassword, Some(messages)).json))
+        result <- Future.successful(Ok(ResponseTools.of(createdItem.withoutPassword, Some(validationResult.messages)).json))
       } yield result
   }
 }

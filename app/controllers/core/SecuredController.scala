@@ -79,13 +79,11 @@ abstract class SecuredController(
             Logger.logger.info(s"MutateJsonAction called with model: '${item.toString}'")
             validator.validate(item, None).flatMap(
               validationResult =>
-                validationResult.isValid.flatMap(valid => {
-                  if(valid) {
-                    mutateBlock(request, validationResult) handleError()
-                  } else {
-                    validationResult.errorsRestResponse.map(error => BadRequest(error.json))
-                  }
-                })
+                if(validationResult.isValid) {
+                  mutateBlock(request, validationResult) handleError()
+                } else {
+                  Future.successful(BadRequest(validationResult.errorsRestResponse.json))
+                }
             )}.recoverTotal {
           error =>
             Future.successful(
@@ -106,13 +104,11 @@ abstract class SecuredController(
               requestUser <- userFromSecuredRequest(request)
               validationResult <- validator.validate(item, requestUser.id)
               response: Result <- {
-                validationResult.isValid.flatMap(valid => {
-                  if(valid) {
-                    mutateBlock(request, validationResult, requestUser) handleError()
-                  } else {
-                    validationResult.errorsRestResponse.map(error => BadRequest(error.json))
-                  }
-                })
+                if(validationResult.isValid) {
+                  mutateBlock(request, validationResult, requestUser) handleError()
+                } else {
+                  Future.successful(BadRequest(validationResult.errorsRestResponse.json))
+                }
               }
             }  yield response
         }.recoverTotal {
@@ -132,13 +128,11 @@ abstract class SecuredController(
             for {
               validationResult <- validator.validate(item, Some(tokenPayload.userId))
               response: Result <- {
-                validationResult.isValid.flatMap(valid => {
-                  if(valid) {
-                    mutateBlock(request, validationResult, tokenPayload) handleError()
-                  } else {
-                    validationResult.errorsRestResponse.map(error => BadRequest(error.json))
-                  }
-                })
+                if(validationResult.isValid) {
+                  mutateBlock(request, validationResult, tokenPayload) handleError()
+                } else {
+                  Future.successful(BadRequest(validationResult.errorsRestResponse.json))
+                }
               }
             }  yield response
         }.recoverTotal {
